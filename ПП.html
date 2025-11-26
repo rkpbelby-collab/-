@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Продуктивный Помощник</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .container { background: #f8f9fa; padding: 30px; border-radius: 10px; }
+        .input-field { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        .submit-btn { background: #4CAF50; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; }
+        .response-box { display: none; margin-top: 20px; padding: 15px; background: white; border-radius: 5px; border-left: 4px solid #4CAF50; white-space: pre-line; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🤖 Продуктивный Помощник</h2>
+        <form id="ai-form">
+            <input type="text" name="text" placeholder="Например: Где купить курицу подешевле?" 
+                   class="input-field" required>
+            <button type="submit" class="submit-btn" id="submit-btn">
+                Получить рекомендацию
+            </button>
+        </form>
+        <div id="ai-response" class="response-box">
+            <h4>💡 Рекомендация:</h4>
+            <p id="response-text"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('ai-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = document.getElementById('submit-btn');
+            const originalText = button.textContent;
+            button.textContent = 'Загружаем...';
+            button.disabled = true;
+            
+            const formData = new FormData(this);
+            const text = formData.get('text');
+            
+            // ⚠️ ЗАМЕНИТЕ ЭТУ СТРОКУ НА ВАШ НОВЫЙ URL:
+            fetch('https://script.google.com/macros/s/ВАШ_НОВЫЙ_ID/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ai-response').style.display = 'block';
+                document.getElementById('response-text').innerText = data.response;
+                button.textContent = originalText;
+                button.disabled = false;
+            })
+            .catch(error => {
+                document.getElementById('ai-response').style.display = 'block';
+                document.getElementById('response-text').innerText = 'Ошибка: ' + error;
+                button.textContent = originalText;
+                button.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
